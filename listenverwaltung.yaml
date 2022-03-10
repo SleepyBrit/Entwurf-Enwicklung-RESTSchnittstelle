@@ -1,0 +1,277 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "0.0.1"
+  title: "Todo-Listen-Verwaltung"
+  contact:
+    email: "wichmann@bbs-os-brinkstr.de"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "127.0.0.1:5000"
+basePath: "/"
+tags:
+- name: "Lists"
+schemes:
+- "http"
+paths:
+  /list/{list_id}:
+    get:
+      summary: "Get all items from list"
+      description: ""
+      tags:
+      - Lists
+      operationId: "getList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "list_id"
+        type: string
+        description: "list id"
+        required: true
+      responses:
+        "200":
+          description: "List item returned"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TodoEntry"
+        "404":
+          description: "Invalid list id"
+    delete:
+      summary: "Delete a list"
+      description: ""
+      tags:
+      - Lists
+      operationId: "deleteList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "list_id"
+        type: string
+        description: "list id"
+        required: true
+      responses:
+        "200":
+          description: "List was deleted"
+        "404":
+          description: "Invalid list id"
+  /list:
+    post:
+      summary: "Add new list"
+      description: ""
+      tags:
+      - Lists
+      operationId: "addList"
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "list object"
+        required: true
+        schema:
+          $ref: "#/definitions/TodoList"
+      responses:
+        "200":
+          description: "List added"
+          schema:
+            $ref: "#/definitions/TodoList"
+        "500":
+          description: "List could not be added"
+  /list/{list_id}/entry:
+    post:
+      summary: "Add new entry"
+      description: ""
+      tags:
+      - Entries
+      operationId: "addEntry"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "list_id"
+        type: string
+        description: "list id"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "entry object"
+        required: true
+        schema:
+          $ref: "#/definitions/TodoList"
+      responses:
+        "200":
+          description: "Entry added"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TodoEntry"
+        "500":
+          description: "Entry could not be added"
+          
+  /list/{list_id}/entry/{entry_id}:
+    post:
+      summary: "update entry"
+      description: ""
+      tags:
+      - Entries
+      operationId: "updateEntry"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "list_id"
+        type: string
+        description: "list id"
+        required: true
+      - in: "path"
+        name: "entry_id"
+        type: string
+        description: "entry id"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "entry object"
+        required: true
+        schema:
+          $ref: "#/definitions/TodoList"
+      responses:
+        "200":
+          description: "Entry added"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TodoEntry"
+        "500":
+          description: "Entry could not be updated"
+    delete:
+      summary: "Delete an entry"
+      description: ""
+      tags:
+      - Entries
+      operationId: "deleteEntry"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "list_id"
+        type: string
+        description: "list id"
+        required: true
+      - in: "path"
+        name: "entry_id"
+        type: string
+        description: "entry id"
+        required: true
+      responses:
+        "200":
+          description: "Entry was deleted"
+        "404":
+          description: "Invalid entry id"
+  /users:
+    get:
+      summary: "get a list of users"
+      description: ""
+      tags:
+        - User
+      operationId: "getUsers"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "List item returned"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        "404":
+          description: "Invalid  id"
+  /user:
+    post:
+      summary: "Add new user"
+      description: ""
+      tags:
+      - User
+      operationId: "addUser"
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "list object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "User added"
+          schema:
+            $ref: "#/definitions/User"
+        "500":
+          description: "User could not be added"
+          
+  /user/{user_id}:
+    delete:
+      summary: "Delete a list"
+      description: ""
+      tags:
+      - User
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "user_id"
+        type: string
+        description: "user id"
+        required: true
+      responses:
+        "200":
+          description: "User was deleted"
+        "404":
+          description: "Invalid user id"
+  
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      user_id:
+        type: "string"
+        format: "uuid"
+  TodoList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+  TodoEntry:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      user_id:
+        type: "string"
+        format: "uuid"
+      list_id:
+        type: "string"
+        format: "uuid"
+      entry_id:
+        type: "string"
+        format: "uuid"
